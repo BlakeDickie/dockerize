@@ -55,6 +55,29 @@ func defaultValue(args ...interface{}) (string, error) {
 	return "", fmt.Errorf("default called with no default value")
 }
 
+func defaultValue2(defaultValue string, arg interface{}) string {
+	if arg != nil && len(arg.(string)) > 0 {
+		return arg.(string)
+	} else {
+		return defaultValue
+	}
+}
+
+// hasPrefix returns whether a given string is a prefix of another string
+func hasPrefix(prefix, s string) bool {
+	return strings.HasPrefix(s, prefix)
+}
+
+// hasSuffix returns whether a given string is a suffix of another string
+func hasSuffix(suffix, s string) bool {
+	return strings.HasSuffix(s, suffix)
+}
+
+// hasSuffix returns whether a given string is a suffix of another string
+func stripLeading(s string, numChars int) string {
+	return s[numChars:]
+}
+
 func parseUrl(rawurl string) *url.URL {
 	u, err := url.Parse(rawurl)
 	if err != nil {
@@ -65,12 +88,16 @@ func parseUrl(rawurl string) *url.URL {
 
 func generateFile(templatePath, destPath string) bool {
 	tmpl := template.New(filepath.Base(templatePath)).Funcs(template.FuncMap{
-		"contains": contains,
-		"exists":   exists,
-		"split":    strings.Split,
-		"replace":  strings.Replace,
-		"default":  defaultValue,
-		"parseUrl": parseUrl,
+		"contains":  contains,
+		"exists":    exists,
+		"split":     strings.Split,
+		"replace":   strings.Replace,
+		"default":   defaultValue,
+		"parseUrl":  parseUrl,
+		"hasPrefix": hasPrefix,
+		"hasSuffix": hasSuffix,
+		"stripLeading": stripLeading,
+		"default2": defaultValue2,
 	})
 
 	if len(delims) > 0 {
